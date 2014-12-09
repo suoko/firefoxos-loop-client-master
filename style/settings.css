@@ -1,0 +1,17 @@
+.settings {
+  z-index: 100;
+  transition: all ease .4s;
+  transform: translateY(100%);
+}
+
+.settings.panel {
+  background: #f4f4f4;
+}
+
+.settings.show {
+  transform: translateY(0);
+}
+
+#settings-logout-identity {
+  word-break: break-all;
+}

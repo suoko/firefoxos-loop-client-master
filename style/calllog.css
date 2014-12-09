@@ -1,0 +1,239 @@
+
+#calllog-container {
+  overflow: hidden;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.calllog-sections-container {
+  width: 200%;
+  overflow: hidden;
+  transition: all .2s ease-in-out;
+}
+
+.calllog-section {
+  width: 50%;
+  overflow: scroll;
+}
+
+.section-empty {
+  display: none;
+  height: 100%;
+  position: relative;
+  margin: 0 1.5rem;
+}
+
+.section-empty-label {
+  border-top: 0.1rem solid rgba(96, 96, 96, 0.5);
+  color: #606060;
+  font-size: 2rem;
+  line-height: 3rem;
+  font-weight: 300;
+  padding: 1rem 1.5rem;
+  flex: 1;
+}
+
+.section-entries li * {
+  pointer-events: none;
+}
+
+#urls-section.empty .section-empty {
+  background: url(images/link_wmark.png) center no-repeat;
+  background-size: 18.1rem auto;
+}
+
+#calls-section.empty .section-empty {
+  background: url(images/ComLog_200x200_clock.png) center no-repeat;
+  background-size: 20rem auto;
+}
+
+#calls-section.empty .section-empty,
+#urls-section.empty .section-empty {
+  display: flex;
+  align-items: center;
+}
+
+#calls-section.empty .calls-section-entries,
+#urls-section.empty .urls-section-entries {
+  display: none;
+}
+
+/* Icons */
+section[role="region"] > header:first-child .icon-settings {
+  background-image: url(images/ico_settings.png);
+}
+
+.call-type-icon {
+  background: url(images/ico_calllog_sp.png) center no-repeat;
+  background-size: 2rem auto;
+  width: 2.5rem;
+  height: 3rem;
+  margin: 0 0.5rem;
+}
+
+.missed .call-type-icon {
+  background-position: 0 -12rem;
+}
+
+.outgoing-audio .call-type-icon {
+  background-position: 0 -9rem;
+}
+
+.incoming-audio .call-type-icon {
+  background-position: 0 -6rem;
+}
+
+.outgoing-video .call-type-icon {
+  background-position: 0 -3rem;
+}
+
+.incoming-video .call-type-icon {
+  background-position: 0 0;
+}
+
+
+gaia-toolbar .icon-user {
+  height: 4rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: url(images/Ico_Contacttoolbar_40x80.png) no-repeat;
+  background-position: center 0rem;
+}
+
+gaia-toolbar .icon-user:active {
+  background-color: #b2f2ff;
+  background-position: center -4rem;
+}
+
+/* List elelments */
+#calls-section li p {
+  margin-left: 0;
+}
+
+.call-time {
+  line-height: 2rem;
+}
+
+.calllog-section .call-time,
+.calllog-section .retry-count,
+.calllog-section .url {
+  font-size: 1.5rem;
+  color: #858585;
+  white-space: nowrap;
+}
+.calllog-section .missed .call-time {
+  color: #bc1515;
+}
+
+#calls-section .url {
+  margin-left: 1rem;
+}
+
+#urls-section .url {
+  white-space: normal;
+}
+
+#urls-section .retry-count {
+  font-style: italic;
+  color: #00adad;
+}
+
+
+/*
+  MEDIA QUERIES FOR device-pixel-ratio
+*/
+
+@media (min--moz-device-pixel-ratio: 1.5) {
+
+  section[role="region"] > header:first-child .icon-settings {
+    background-image: url(images/ico_settings@1.5x.png);
+  }
+
+  .call-type-icon {
+    background-image: url(images/ico_calllog_sp@1.5x.png);
+  }
+
+  gaia-toolbar .icon-user {
+    background: url(images/Ico_Contacttoolbar_40x80@1.5x.png) no-repeat;
+    background-size: 4rem 8rem;
+    background-position: center 0rem;
+  }
+
+  gaia-toolbar .icon-user:active {
+    background-color: #b2f2ff;
+    background-position: center -4rem;
+  }
+
+  #urls-section.empty .section-empty {
+    background-image: url(images/link_wmark@1.5x.png);
+  }
+
+  #calls-section.empty .section-empty {
+    background-image: url(images/ComLog_200x200_clock@1.5x.png);
+  }
+
+}
+
+@media (min--moz-device-pixel-ratio: 2) {
+
+  section[role="region"] > header:first-child .icon-settings {
+    background-image: url(images/ico_settings@2x.png);
+  }
+  .call-type-icon {
+    background-image: url(images/ico_calllog_sp@2x.png);
+  }
+
+  gaia-toolbar .icon-user {
+    background: url(images/Ico_Contacttoolbar_40x80@2x.png) no-repeat;
+    background-position: center 0rem;
+    background-size: 4rem 8rem;
+  }
+
+  gaia-toolbar .icon-user:active {
+    background-color: #b2f2ff;
+    background-position: center -4rem;
+  }
+
+  #urls-section.empty .section-empty {
+    background-image: url(images/link_wmark@2x.png);
+  }
+
+  #calls-section.empty .section-empty {
+    background-image: url(images/ComLog_200x200_clock@2x.png);
+  }
+
+}
+
+@media (min--moz-device-pixel-ratio: 2.25) {
+
+  section[role="region"] > header:first-child .icon-settings {
+    background-image: url(ico_images/settings@2.25x.png);
+  }
+
+  .call-type-icon {
+    background-image: url(images/ico_calllog_sp@2.25x.png);
+  }
+
+  gaia-toolbar .icon-user {
+    background: url(images/Ico_Contacttoolbar_40x80@2.25x.png) no-repeat;
+    background-position: center 0rem;
+    background-size: 4rem 8rem;
+  }
+
+  gaia-toolbar .icon-user:active {
+    background-color: #b2f2ff;
+    background-position: center -4rem;
+  }
+
+  #urls-section.empty .section-empty {
+    background-image: url(images/link_wmark@2.25x.png);
+  }
+
+  #calls-section.empty .section-empty {
+    background-image: url(images/ComLog_200x200_clock@2.25x.png);
+  }
+
+}

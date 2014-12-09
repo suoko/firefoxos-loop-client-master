@@ -1,0 +1,7 @@
+{
+  "manifestURL": "https://marketplace.firefox.com/hello/manifest.webapp",
+  "installOrigin": "https://marketplace.firefox.com",
+  "removable": false,
+  "type": "privileged",
+  "external": true
+}

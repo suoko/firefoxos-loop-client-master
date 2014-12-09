@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Loop sketch</title>
+    <!-- Prevent scrolling -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <!-- App styles -->
+    <link rel="stylesheet" type="text/css" href="style/bb/progress_activity.css">
+    <link rel="stylesheet" type="text/css" href="style/bb/tabs.css">
+    <link rel="stylesheet" type="text/css" href="style/bb/action_menu.css">
+    <link rel="stylesheet" type="text/css" href="style/bb/switches.css">
+    <link rel="stylesheet" type="text/css" href="style/bb/lists.css">
+    <link rel="stylesheet" type="text/css" href="style/bb/headers.css">
+    <link rel="stylesheet" type="text/css" href="style/bb/confirm.css">
+    <link rel="stylesheet" type="text/css" href="style/bb/buttons.css">
+    <link rel="stylesheet" type="text/css" href="libs/components/gaia-layout/style.css">
+
+    <link rel="stylesheet" type="text/css" href="style/share.css">
+    <link rel="stylesheet" type="text/css" href="style/webview.css">
+    <link rel="stylesheet" type="text/css" href="style/settings.css">
+    <link rel="stylesheet" type="text/css" href="style/loading_overlay.css">
+    <link rel="stylesheet" type="text/css" href="style/calllog.css">
+    <link rel="stylesheet" type="text/css" href="style/main.css">
+    <link rel="stylesheet" type="text/css" href="style/transitions.css">
+    <link rel="stylesheet" type="text/css" href="style/wizard.css">
+    <link rel="stylesheet" type="text/css" href="style/splash_screen.css">
+
+    <link rel="resource" type="application/l10n" href="locales/locales.ini">
+    <link rel="resource" type="application/l10n" href="locales/date.ini">
+
+    <script defer src="js/config.js"></script>
+    <script defer src="js/version.js"></script>
+    <script defer src="js/utils.js"></script>
+
+    <script defer src="libs/template.js"></script>
+    <script defer src="libs/lazy_loader.js"></script>
+    <script defer src="libs/l10n.js"></script>
+    <script defer src="libs/l10n_date.js"></script>
+    <script defer src="libs/async_storage.js"></script>
+    <script defer src="libs/hawk.js"></script>
+    <script defer src="libs/sjcl.min.js"></script>
+    <script defer src="libs/token.js"></script>
+    <script defer src="libs/uuid.js"></script>
+
+    <script defer src="libs/components/gaia-component-utils/index.js"></script>
+    <script defer src="libs/components/gaia-toolbar/script.js"></script>
+
+    <script defer src="js/helpers/contacts_helper.js"></script>
+    <script defer src="js/helpers/action_log_db.js"></script>
+    <script defer src="js/helpers/tone_player_helper.js"></script>
+    <script defer src="js/helpers/call_screen_manager.js"></script>
+    <script defer src="js/helpers/activities.js"></script>
+    <script defer src="js/helpers/account.js"></script>
+    <script defer src="js/helpers/account_helper.js"></script>
+    <script defer src="js/helpers/account_storage.js"></script>
+    <script defer src="js/helpers/call_helper.js"></script>
+    <script defer src="js/helpers/simple_push_helper.js"></script>
+    <script defer src="js/helpers/client_request_helper.js"></script>
+    <script defer src="js/helpers/metrics.js"></script>
+    <script defer src="js/helpers/telemetry.js"></script>
+
+    <script defer src="js/screens/wizard/authenticate.js"></script>
+    <script defer src="js/screens/wizard/tutorial.js"></script>
+    <script defer src="js/screens/wizard/wizard.js"></script>
+
+    <script defer src="js/controller.js"></script>
+
+    <script defer src="js/screens/loading_overlay.js"></script>
+    <script defer src="js/screens/webview_overlay.js"></script>
+    <script defer src="js/screens/option_menu.js"></script>
+    <script defer src="js/screens/splash_screen.js"></script>
+    <script defer src="js/screens/settings.js"></script>
+    <script defer src="js/screens/calllog.js"></script>
+    <script defer src="js/screens/share.js"></script>
+    <script defer src="js/screens/settings.js"></script>
+
+    <script defer src="js/boot.js"></script>
+  </head>
+
+  <body role="application" class="animate" data-layout="wizard">
+    <section id="loading-overlay" class="panel" role="region" data-type="dialog">
+      <p><progress class="light"></progress></p>
+      <p id="loading-overlay-message"></p>
+    </section>
+    <section id="webview-overlay" class="panel" role="region" data-type="dialog">
+      <header>
+        <button id="webview-close"><span class="icon icon-close"></span></button>
+        <h1 id="webview-overlay-title"></h1>
+      </header>
+      <iframe id="webview-iframe" src=""></iframe>
+    </section>
+    <section id="splash-screen" class="show">
+    </section>
+    <!--
+      Every relevant screen which have it own 'panel'
+    -->
+    <section id="wizard-panel" data-step="0" class="panel main">
+      <!--
+        Wizard is based on 3 well differentiated sections:
+        - Tutorial > "wizard-tutorial-section"
+        - Authenticate > "wizard-authenticate-section"
+      -->
+      <section id="wizard-tutorial-section"  class="wizard-section vbox current">
+        <header id="wizard-tutorial-header">
+          <p data-l10n-id="welcome"></p>
+          <p data-l10n-id="serviceName"></p>
+        </header>
+        <ul id="wizard-tutorial-slideshow" class="fit">
+          <li class="wizard-tutorial-step">
+            <p data-l10n-id="tagline"></p>
+            <footer data-l10n-id="face2face"></footer>
+          </li>
+          <li class="wizard-tutorial-step">
+            <footer data-l10n-id="anyoneWithBrowser"></footer>
+          </li>
+          <li class="wizard-tutorial-step">
+            <footer data-l10n-id="anywhereInTheWorld"></footer>
+          </li>
+        </ul>
+        <ul id="wizard-tutorial-progress" class="tutorial-progress-indicator">
+        </ul>
+        <div id="wizard-elements">
+          <div id="wizard-face-1" class="layer-4"></div>
+          <div id="wizard-mobile" class="layer-3"></div>
+          <div id="wizard-face-2" class="layer-2"></div>
+          <div id="wizard-circle" class="layer-1"></div>
+          <div id="wizard-tablet" class="layer-2"></div>
+          <div id="wizard-desktop" class="layer-1"></div>
+          <ul id="wizard-main-pins" class="pins-container layer-3">
+            <li id="pin-1" class="left large"><span></span></li>
+            <li id="pin-2" class="right large"><span></span></li>
+            <li id="wizard-dottedline"></li>
+          </ul>
+          <ul id="wizard-pins" class="pins-container layer-3">
+            <li id="pin-3" class="left"><span></span></li>
+            <li id="pin-4" class="right"><span></span></li>
+            <li id="pin-5" class="right"><span></span></li>
+            <li id="pin-6" class="right"><span></span></li>
+            <li id="pin-7" class="left"><span></span></li>
+            <li id="pin-8" class="left"><span></span></li>
+            <li id="pin-9" class="right"><span></span></li>
+            <li id="pin-10" class="right"><span></span></li>
+            <li id="pin-11" class="right"><span></span></li>
+            <li id="pin-12" class="right"><span></span></li>
+            <li id="pin-13" class="left"><span></span></li>
+            <li id="pin-14" class="left "><span></span></li>
+          </ul>
+          <ul id="wizard-backgrounds">
+            <li id="wizard-map" class="layer-1"></li>
+            <li id="wizard-world" class="layer-0"></li>
+          </ul>
+        </div>
+      </section>
+      <section id="wizard-login" class="wizard-section vbox">
+        <header>
+          <p data-l10n-id="startUsing"></p>
+          <p data-l10n-id="serviceName"></p>
+          <p data-l10n-id="todayWizard"></p>
+        </header>
+        <footer class="gaia-footer vbox">
+          <p>
+            <span data-l10n-id="byProceeding"><span><br/>
+            <a data-url="http://www.mozilla.com" data-title="ToS" data-webview="true" data-l10n-id="termsOfService"></a>
+          </p>
+          <button id="authenticate-msisdn-button" class="wizard-button" data-l10n-id="usePhone">
+          </button>
+          <button id="authenticate-fxa-button" class="wizard-button" data-l10n-id="useFxA">
+          </button>
+        </footer>
+      </section>
+    </section>
+    <section id="calllog-panel" class="panel main vbox skin-comms" role="region">
+      <header>
+        <menu type="toolbar">
+          <a id="open-settings-button"><span class="icon icon-settings"></span></a>
+        </menu>
+        <h1 data-l10n-id="serviceName"></h1>
+      </header>
+      <section id="calllog-container" class="vbox fit">
+        <nav>
+          <ul role="tablist" class="bb-tablist" data-type="filter">
+            <li role="presentation">
+              <a id="calls-section-filter" role="tab" aria-selected="true" data-l10n-id="callsTab"></a>
+            </li>
+            <li role="presentation">
+              <a id="urls-section-filter" role="tab" aria-selected="false" data-l10n-id="linksTab"></a>
+            </li>
+          </ul>
+        </nav>
+        <div class="calllog-sections-container hbox fit">
+          <div id="calls-section" class="calllog-section gaia-list active sticky">
+            <div class="section-empty">
+              <p class="section-empty-label" data-l10n-id="emptyCalls">
+              </p>
+            </div>
+            <div id="calls-section-entries" class="section-entries vbox middle">
+            </div>
+          </div>
+          <div id="urls-section" class="calllog-section gaia-list sticky">
+            <div class="section-empty">
+              <p class="section-empty-label" data-l10n-id="emptyLinks">
+              </p>
+            </div>
+            <div id="urls-section-entries" class="section-entries">
+            </div>
+          </div>
+        </div>
+      </section>
+      </button>
+      <gaia-toolbar>
+        <button id="call-from-loop" class="icon-user"></button>
+      </gaia-toolbar>
+    </section>
+    <section id="contact-detail-panel" class="panel main">
+      Contact detail
+    </section>
+    <section id="share-panel" class="panel share skin-comms" role="region">
+      <header>
+        <button id="share-close-button"><span class="icon icon-close"></span></button>
+        <h1 data-l10n-id="shareTitle"></h1>
+      </header>
+      <section class="share-contact-info">
+        <div class="share-contact-photo"></div>
+        <div class="share-contact-details">
+          <p id="contact-name-to-share" class="share-contact-details-primary"></p>
+          <p id="sharing-reason" class="share-contact-details-secondary" data-l10n-id="notAUser"></p>
+        </div>
+      </section>
+      <section class="share-explanation" data-l10n-id="noProblem">
+      </section>
+      <section class="share-link">
+        <span class="share-link-label"></span>
+        <span id="link-to-share" class="share-link-url">
+        </span>
+      </section>
+      <section class="share-options" data-type="list">
+        <p class="share-options-title" data-l10n-id="shareVia">
+        </p>
+        <ul>
+          <li id="share-by-sms">
+            <aside class="pack-end">
+            </aside>
+            <a>
+              <p data-l10n-id="message"></p>
+            </a>
+          </li>
+          <li id="share-by-email">
+            <aside class="pack-end">
+            </aside>
+            <a>
+              <p data-l10n-id="email"></p>
+            </a>
+          </li>
+          <li id="share-by-others">
+            <aside class="pack-end">
+            </aside>
+            <a>
+              <p data-l10n-id="other">Other</p>
+            </a>
+          </li>
+        </ul>
+      </section>
+    </section>
+    <section id="settings-panel" class="panel settings vbox skin-organic" role="region">
+      <header>
+        <menu type="toolbar">
+          <button id="settings-close-button" data-l10n-id="done"></button>
+        </menu>
+        <h1 data-l10n-id="settingsTitle"></h1>
+      </header>
+      <section class="gaia-list fit scroll">
+        <ul>
+          <li class="vbox">
+            <p data-l10n-id="defaultCallMode"></p>
+            <span class="button icon icon-dialog">
+              <select id="video-default-setting">
+                <option value="true" data-l10n-id="video"></option>
+                <option value="false" data-l10n-id="audio"></option>
+              </select>
+            </span>
+          </li>
+          <li class="vbox">
+            <p data-l10n-id="defaultCamera"></p>
+            <span class="button icon icon-dialog">
+              <select id="camera-default-setting">
+                <option value="true" data-l10n-id="front"></option>
+                <option value="false" data-l10n-id="back"></option>
+              </select>
+            </span>
+          </li>
+          <li>
+            <button id="settings-clean-calls-button" data-l10n-id="cleanAllCalls"></button>
+          </li>
+          <li>
+            <button id="settings-clean-urls-button" data-l10n-id="cleanAllLinks"></button>
+          </li>
+          <li class="vbox">
+            <p data-l10n-id="version"></p>
+            <p id="settings-commit-hash-tag"></p>
+          </li>
+        </ul>
+      </section>
+      <footer class="gaia-footer vbox">
+        <p id="settings-logout-identity"></p>
+        <button id="settings-logout-button" data-l10n-id="logOut"></button>
+      </footer>
+    </section>
+
+    <!-- Templates -->
+
+    <div id="calls-url-tmpl" class="hide">
+      <!--
+      <div class="hbox fit middle no-overflow ${iconName}">
+        <span class="call-type-icon"></span>
+        <div class="vbox fit no-overflow">
+          <div class="primary-info hbox bottom">
+            <p class="fit ellipsis">${primary}</p>
+            <span class="call-time">${time}</span>
+          </div>
+          <div class="hbox bottom no-overflow">
+            <span class="retry-count">${duration}</span>
+            <span class="url ellipsis">{link}</span>
+          </div>
+        </div>
+      </div>
+      -->
+    </div>
+    <div id="calls-without-url-tmpl" class="hide">
+      <!--
+      <div class="hbox fit middle no-overflow ${iconName}">
+        <span class="call-type-icon"></span>
+        <div class="vbox fit no-overflow">
+          <div class="primary-info hbox bottom">
+            <p class="fit ellipsis">${primary}</p>
+            <span class="call-time">${time}</span>
+          </div>
+          <div class="hbox bottom no-overflow">
+            <span class="retry-count">${duration}</span>
+          </div>
+        </div>
+      </div>
+      -->
+    </div>
+    <div id="url-tmpl" class="hide">
+      <!--
+      <div class="vbox no-overflow">
+        <div class="hbox">
+          <p class="primary-info fit ellipsis">${primary}</p>
+          <span class="call-time">${time}</span>
+        </div>
+        <p class="url">${link}</p>
+        <p class="retry-count" data-need-update="true" data-revoked="${revoked}" data-format-date="revoke" data-timestamp="${revokeTimestamp}">${expiration}</p>
+      </div>
+      -->
+    </div>
+  </body>
+</html>
